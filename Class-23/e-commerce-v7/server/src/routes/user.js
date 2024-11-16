@@ -41,14 +41,18 @@ router.post('/login', catchAsync(async(req, res) => {
         throw new AuthenticationError('Username or password are incorrect');
     }
 
+    // check if incoming password is valid or not
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
+    // throw error if password is invalid
     if (!isValidPassword) {
         throw new AuthenticationError('Username or password are incorrect');
     }
 
+    // sign the JWT token with secretKey(in our case: SOME_SECRET)
     const token = jwt.sign({ userId: user._id }, "SOME_SECRET");
 
+    // Send the token back in the response to client
     res.status(200).json({ status: "SUCCESS", token: token });
 }));
 
